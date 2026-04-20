@@ -29,6 +29,8 @@ public partial class context : DbContext
 
     public virtual DbSet<Profesore> Profesores { get; set; }
 
+    public virtual DbSet<User> Users { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=localhost;Database=lab_05;Username=postgres;Password=31416911;Port=3006");
@@ -173,6 +175,21 @@ public partial class context : DbContext
             entity.Property(e => e.Nombre)
                 .HasMaxLength(100)
                 .HasColumnName("nombre");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("Users_pkey");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Name)
+                .HasColumnType("char")
+                .HasColumnName("name");
+            entity.Property(e => e.Password)
+                .HasColumnType("char")
+                .HasColumnName("password");
         });
 
         OnModelCreatingPartial(modelBuilder);

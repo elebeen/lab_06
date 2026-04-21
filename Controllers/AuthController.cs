@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using lab_06.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
+using lab_06.Services;
 
 namespace lab_06.Controllers;
 
@@ -12,42 +9,29 @@ namespace lab_06.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IConfiguration _configuration;
+    private readonly IAuthService _auth;
     
-    public AuthController(IConfiguration configuration)
+    public AuthController(IAuthService auth)
     {
-        _configuration = configuration;
+        _auth = auth;
     }
 
     [HttpPost("login")]
     public IActionResult Login([FromBody] User login)
     {
-        if (login.Name.ToString() == "admin" && login.Password.ToString() == "admin")
+        if (!_auth.ValidateUser(login.Name.ToString(), login.Password.ToString()))
         {
-            var claims = new[]
-            {
-                new Claim(type: ClaimTypes.Name, login.Name.ToString()),
-                new Claim(type: ClaimTypes.Role, "Admin")
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes
-                (_configuration["Jwt:SecretKey"]));
-            var creds = new SigningCredentials(key, algorithm: SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds);
-
-            return Ok(new
-            {
-                token = new JwtSecurityTokenHandler().WriteToken(token)
-            });
+            return Unauthorized();
         }
 
-        return Unauthorized();
+        // 2. Definir roles/permisos (esto podría venir de tu BD)
+        string role = "Administrator"; 
+        var permissions = new List<string> { "Read", "Write", "Delete" };
+
+        // 3. Generar token con claims
+        var token = _auth.GenerateJwtToken(login.Name.ToString(), role, permissions);
+
+        return Ok(new { token });
     }
 
     [Authorize(Roles = "Admin")]
@@ -56,5 +40,4 @@ public class AuthController : ControllerBase
     {
         return Ok("solo admins");
     }
-    
 }

@@ -2,5 +2,6 @@
 
 public interface IAuthService
 {
-    string? Authenticate(string username, string password);
+    public bool ValidateUser(string username, string password);
+    string GenerateJwtToken(string username, string role, List<string>? permissions = null);
 }

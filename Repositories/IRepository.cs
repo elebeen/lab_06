@@ -1,4 +1,4 @@
-﻿namespace lab_06.Interfaces;
+﻿namespace lab_06.Repositories;
 
 public interface IRepository<TEntity> where TEntity : class
 {

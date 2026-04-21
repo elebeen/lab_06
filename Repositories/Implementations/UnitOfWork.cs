@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using lab_06.Models;
 
-namespace lab_06.Interfaces.Implementations;
+namespace lab_06.Repositories.Implementations;
 
 public class UnitOfWork : IUnitOfWork
 {

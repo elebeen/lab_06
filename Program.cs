@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using lab_06.Repositories;
+using lab_06.Repositories.Implementations;
+using lab_06.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +30,14 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Administrator", policy => policy.RequireRole("Administrator"));
 });
+
 builder.Services.AddOpenApi();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<context>(options =>
+    options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 

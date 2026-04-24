@@ -5,10 +5,10 @@ namespace lab_06.Repositories.Implementations;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private Hashtable _repositories;
-    private readonly context _context;
+    private readonly Hashtable _repositories;
+    private readonly Context _context;
     
-    public UnitOfWork(context context)
+    public UnitOfWork(Context context)
     {
         _repositories = new Hashtable();
         _context = context;

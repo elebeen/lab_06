@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace lab_06.Models;
 
-public partial class context : DbContext
+public partial class Context : DbContext
 {
-    public context()
+    public Context()
     {
     }
 
-    public context(DbContextOptions<context> options)
+    public Context(DbContextOptions<Context> options)
         : base(options)
     {
     }
@@ -182,7 +182,7 @@ public partial class context : DbContext
             entity.HasKey(e => e.Id).HasName("Users_pkey");
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
+                .UseIdentityAlwaysColumn()
                 .HasColumnName("id");
             entity.Property(e => e.Name).HasColumnName("name");
             entity.Property(e => e.Password).HasColumnName("password");

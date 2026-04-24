@@ -42,7 +42,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<context>(options =>
+builder.Services.AddDbContext<Context>(options =>
     options.UseNpgsql(connectionString));
 
 // Agregar esto cerca de donde agregas los otros servicios:

@@ -1,12 +1,13 @@
 ﻿using lab_06.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace lab_06.Repositories.Implementations;
 
 public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
-    private readonly context _context;
+    private readonly Context _context;
 
-    public Repository(context context)
+    public Repository(Context context)
     {
         _context = context;
     }
@@ -23,7 +24,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 
     public TEntity FindByName(string name)
     {
-        return _context.Set<TEntity>().Find(name);
+        return _context.Set<TEntity>().FirstOrDefault(e => EF.Property<string>(e, "Name") == name);
     }
 
     public void Add(TEntity entity)

@@ -61,7 +61,7 @@ public class AuthService : IAuthService
             return false;
         }
         
-        bool isPasswordValid = BCrypt.Net.BCrypt.Verify(user.Password, user.Password);
+        bool isPasswordValid = BCrypt.Net.BCrypt.Verify(user.Password, existingUser.Password);
         
         return isPasswordValid;
     }

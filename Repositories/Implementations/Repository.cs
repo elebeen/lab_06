@@ -21,6 +21,11 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
         return _context.Set<TEntity>().Find(id);
     }
 
+    public TEntity FindByName(string name)
+    {
+        return _context.Set<TEntity>().Find(name);
+    }
+
     public void Add(TEntity entity)
     {
         _context.Set<TEntity>().Add(entity);

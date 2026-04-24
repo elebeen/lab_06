@@ -2,17 +2,21 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Http.HttpResults;
+using lab_06.Models.Dtos;
+using lab_06.Repositories;
+using lab_06.Models;
 
 namespace lab_06.Services.Implementations;
 
 public class AuthService : IAuthService
 {
     private readonly IConfiguration _configuration;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public AuthService(IConfiguration configuration)
+    public AuthService(IConfiguration configuration,  IUnitOfWork unitOfWork)
     {
         _configuration = configuration;
+        _unitOfWork = unitOfWork;
     }
 
     public string GenerateJwtToken(string username, string role, List<string>? permissions = null)
@@ -48,9 +52,17 @@ public class AuthService : IAuthService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public bool ValidateUser(string username, string password)
+    public bool ValidateUser(UserDto user)
     {
-        // Aquí iría tu lógica real de base de datos
-        return username == "admin" && password == "admin";
+        var existingUser = _unitOfWork.Repository<User>().FindByName(user.Name);
+        
+        if (user == null)
+        {
+            return false;
+        }
+        
+        bool isPasswordValid = BCrypt.Net.BCrypt.Verify(user.Password, user.Password);
+        
+        return isPasswordValid;
     }
 }

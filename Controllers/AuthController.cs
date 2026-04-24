@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using lab_06.Models;
+using lab_06.Models.Dtos;
 using lab_06.Services;
 
 namespace lab_06.Controllers;
@@ -17,24 +18,23 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] User login)
+    public IActionResult Login([FromBody] UserDto login)
     {
-        if (!_auth.ValidateUser(login.Name.ToString(), login.Password.ToString()))
+        if (!_auth.ValidateUser(login))
         {
             return Unauthorized();
         }
 
         // 2. Definir roles/permisos (esto podría venir de tu BD)
         string role = "Administrator"; 
-        var permissions = new List<string> { "Read", "Write", "Delete" };
 
         // 3. Generar token con claims
-        var token = _auth.GenerateJwtToken(login.Name.ToString(), role, permissions);
+        var token = _auth.GenerateJwtToken(login.Name, role);
 
         return Ok(new { token });
     }
 
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Administrator")]
     [HttpGet("admin")]
     public IActionResult GetAdmin()
     {

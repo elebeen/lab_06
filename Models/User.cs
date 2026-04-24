@@ -5,9 +5,9 @@ namespace lab_06.Models;
 
 public partial class User
 {
-    public long Id { get; set; }
+    public int Id { get; set; }
 
-    public char Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public char Password { get; set; }
+    public string Password { get; set; } = null!;
 }

@@ -184,12 +184,8 @@ public partial class context : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
-            entity.Property(e => e.Name)
-                .HasColumnType("char")
-                .HasColumnName("name");
-            entity.Property(e => e.Password)
-                .HasColumnType("char")
-                .HasColumnName("password");
+            entity.Property(e => e.Name).HasColumnName("name");
+            entity.Property(e => e.Password).HasColumnName("password");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -6,6 +6,7 @@ using lab_06.Repositories.Implementations;
 using lab_06.Models;
 using Microsoft.EntityFrameworkCore;
 using lab_06.Services.Implementations;
+using lab_06.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,13 +46,15 @@ builder.Services.AddDbContext<context>(options =>
     options.UseNpgsql(connectionString));
 
 // Agregar esto cerca de donde agregas los otros servicios:
-builder.Services.AddScoped<lab_06.Services.IAuthService, AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
@@ -62,6 +65,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
+app.UseAuthentication();
 app.UseRouting();
 app.MapControllers();
 
